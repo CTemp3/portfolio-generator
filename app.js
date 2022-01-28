@@ -33,9 +33,22 @@ const promptUser = () => {
             }
         },
         {
+            type: 'confirm',
+            name:'confirmAbout',
+            message: 'Would you like to enter some information about yourself for an "About" section?',
+            default: true
+        },
+        {
             type: 'input',
             name: 'about',
-            message: 'Provide some information about yourself:'
+            message: 'Provide some information about yourself:',
+            when: ({ confirmAbout }) => {
+                if(confirmAbout) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
     ]);
     
@@ -124,15 +137,16 @@ Add a New Project
 };
 
 promptUser()
-  .then(promptProject)
-  .then(portfolioData => {
-    console.log(portfolioData);
-  });
-// fs.writeFile('./index.html', generatePage(userName, github), err => {
-//     if(err) throw err;
+    .then(promptProject)
+    .then(portfolioData => {
+        const pageHTML = generatePage(portfolioData);
 
-//     console.log('Portfolio comlete! Check out index.html to see the output!')
-// });
+        fs.writeFile('./index.html', pageHTML, err => {
+        if(err) throw new Error(err);
+
+        console.log('Page created! Check out index.html in this directory to see it!');
+        });
+    });
 
 
 
